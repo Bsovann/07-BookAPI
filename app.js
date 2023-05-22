@@ -37,11 +37,26 @@ const bookSchema = new mongoose.Schema({
 // Schema
 const Book = mongoose.model("Book", bookSchema); 
 
-// GET
-app.get("/books", async function(req, res){
+// GET, PUT, and DELETE
+app.route("/books")
+.get(async function(req, res){
    res.send(await Book.find({}));
-});
+})
+.post(async function(req, res){
+    const newBook = new Book({
+        id : req.body.id,
+        title : req.body.title,
+        author : req.body.author, 
+        description : req.body.description
+    });
 
+    Book.insertMany([newBook]);
+    res.send("Reach Post Request!");
+})
+.delete(async function(req, res){
+    await Book.deleteMany({});
+    res.send("Successfully deleted all docs!");
+})
 
 
 app.listen(3000, function(){
