@@ -39,9 +39,11 @@ const Book = mongoose.model("Book", bookSchema);
 
 // GET, PUT, and DELETE
 app.route("/books")
+// GET Request (Retrive all Documents)
 .get(async function(req, res){
    res.send(await Book.find({}));
 })
+// POST Request (Add a document to a collection)
 .post(async function(req, res){
     const newBook = new Book({
         id : req.body.id,
@@ -53,10 +55,11 @@ app.route("/books")
     Book.insertMany([newBook]);
     res.send("Reach Post Request!");
 })
+// Delete All Documents Request
 .delete(async function(req, res){
     await Book.deleteMany({});
     res.send("Successfully deleted all docs!");
-})
+}); 
 
 
 app.listen(3000, function(){
