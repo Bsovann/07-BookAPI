@@ -6,7 +6,8 @@ const mongoose = require("mongoose");
 const app = express();
 
 app.set("view engine", 'ejs'); 
-
+app.use(bodyParser.urlencoded({extended : true})); 
+app.use(express.static("public")); 
 /*
     RESTFUL BOOKAPI
 
@@ -18,9 +19,30 @@ app.set("view engine", 'ejs');
 
 */
 
-app.get('/', function(req, res){
-    res.send("Hello World! You're connected!!");
-})
+// Connect DB using Mongoose
+main().catch(err => console.log(err));
+
+async function main() {
+  await mongoose.connect('mongodb://127.0.0.1:27017/Library');
+  // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/Library');` if your database has auth enabled
+}
+
+const bookSchema = new mongoose.Schema({
+    id : String, 
+    title : String, 
+    author : String, 
+    description : String 
+}); 
+
+// Schema
+const Book = mongoose.model("Book", bookSchema); 
+
+// GET
+app.get("/books", async function(req, res){
+   res.send(await Book.find({}));
+});
+
+
 
 app.listen(3000, function(){
     console.log("Server started on port 3000");
