@@ -75,9 +75,7 @@ app.route("/books/:Bookid")
         author : req.body.author, 
         description : req.body.description
     };
-
     await Book.findOneAndReplace({id : req.params.Bookid}, replacedInfo);
-
 })
 // Patch Single book (Update Non-atomically)
 .patch(async function(req, res){
@@ -87,8 +85,13 @@ app.route("/books/:Bookid")
         author : req.body.author, 
         description : req.body.description
     };
-
 res.send(await Book.updateOne({id : req.params.Bookid}, updatedInfo));
+})
+
+// Delete Single book based BookID
+.delete(async function(req, res){
+    await Book.findOneAndDelete({id : req.params.Bookid});
+    res.send("Successfully deleted a Book!");
 });
 
 
