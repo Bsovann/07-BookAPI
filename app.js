@@ -63,17 +63,32 @@ app.route("/books")
 
 // GET, PUT, PATCH, DELETE - Single Book
 app.route("/books/:Bookid")
+// GET Single Book 
 .get(async function(req, res){
     res.send(await Book.findOne({id : req.params.Bookid}).exec());
 })
+// PUT Single book (Update atomically)
 .put(async function(req, res){
-    const replacedBook = new Book({
+    const replacedInfo = {
         id : req.body.id,
         title : req.body.title,
         author : req.body.author, 
         description : req.body.description
-    });
-    await Book.findOneAndReplace()
+    };
+
+    await Book.findOneAndReplace({id : req.params.Bookid}, replacedInfo);
+
+})
+// Patch Single book (Update Non-atomically)
+.patch(async function(req, res){
+    const updatedInfo = {
+        id : req.body.id,
+        title : req.body.title,
+        author : req.body.author, 
+        description : req.body.description
+    };
+
+res.send(await Book.updateOne({id : req.params.Bookid}, updatedInfo));
 });
 
 
