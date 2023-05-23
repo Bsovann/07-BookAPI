@@ -61,6 +61,21 @@ app.route("/books")
     res.send("Successfully deleted all docs!");
 }); 
 
+// GET, PUT, PATCH, DELETE - Single Book
+app.route("/books/:Bookid")
+.get(async function(req, res){
+    res.send(await Book.findOne({id : req.params.Bookid}).exec());
+})
+.put(async function(req, res){
+    const replacedBook = new Book({
+        id : req.body.id,
+        title : req.body.title,
+        author : req.body.author, 
+        description : req.body.description
+    });
+    await Book.findOneAndReplace()
+});
+
 
 app.listen(3000, function(){
     console.log("Server started on port 3000");
